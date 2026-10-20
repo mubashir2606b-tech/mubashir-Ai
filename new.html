@@ -1,13 +1,565 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-   <p>mubashir</p>
-   <p>mumtaz</p>
-   <p>tayyab</p> 
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Velocity Motors</title>
+    <style>
+      :root {
+        --bg: #0b1220;
+        --bg-soft: #101b2d;
+        --panel: rgba(18, 27, 40, 0.9);
+        --primary: #ff6b35;
+        --primary-2: #ff8a5b;
+        --text: #edf6ff;
+        --muted: #a9bfd3;
+        --line: rgba(255, 255, 255, 0.08);
+        --success: #2dd4bf;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #08111d, #111d2d 30%, #0b1220);
+        color: var(--text);
+      }
+      a { text-decoration: none; color: inherit; }
+      img { max-width: 100%; display: block; }
+      .container { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(9, 16, 27, 0.75);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 76px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        font-size: 1.25rem;
+        letter-spacing: 0.08em;
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        box-shadow: 0 12px 28px rgba(255, 107, 53, 0.35);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+
+      .nav-links a:hover { color: var(--text); }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 999px;
+        padding: 14px 22px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .btn:hover { transform: translateY(-1px); }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        color: #fff;
+        box-shadow: 0 14px 28px rgba(255, 107, 53, 0.3);
+      }
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+        color: var(--text);
+      }
+
+      .hero { padding: 70px 0 34px; }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 32px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--muted);
+        border: 1px solid var(--line);
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 6vw, 5rem);
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+        margin: 18px 0 16px;
+      }
+
+      .hero-copy p {
+        color: var(--muted);
+        font-size: 1.03rem;
+        line-height: 1.8;
+        max-width: 620px;
+        margin: 0 0 26px;
+      }
+
+      .hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .mini-stats {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+      }
+
+      .stat-box {
+        min-width: 120px;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+
+      .stat-box strong {
+        display: block;
+        font-size: 1.3rem;
+        margin-bottom: 4px;
+      }
+
+      .stat-box span {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .car-card {
+        position: relative;
+        background: linear-gradient(180deg, rgba(19,31,47,0.8), rgba(10,15,22,0.9));
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 18px;
+        box-shadow: 0 30px 70px rgba(6, 10, 18, 0.55);
+        overflow: hidden;
+      }
+
+      .car-visual {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-height: 300px;
+        background: radial-gradient(circle at top, rgba(255, 140, 96, 0.18), transparent 36%), linear-gradient(180deg, #0d1624, #0b1220 64%);
+        border-radius: 22px;
+        overflow: hidden;
+      }
+
+      .car-visual::before {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 50%;
+        left: 50%;
+        top: 18%;
+        transform: translateX(-50%);
+      }
+
+      .car-pill {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      .car-visual img {
+        width: min(100%, 600px);
+        filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.45));
+        transform: scale(1.1);
+      }
+
+      .car-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 18px;
+        padding-top: 18px;
+      }
+
+      .car-name h3 { margin: 0; font-size: 1.6rem; }
+      .car-name p { margin: 6px 0 0; color: var(--muted); }
+      .price { text-align: right; }
+      .price span { display: block; font-size: 0.78rem; color: var(--muted); }
+      .price strong { font-size: 1.8rem; }
+
+      section { padding: 42px 0; }
+
+      .section-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .section-heading h2 {
+        margin: 0;
+        font-size: clamp(2rem, 3vw, 2.8rem);
+      }
+
+      .section-heading a { color: var(--primary-2); font-weight: 700; }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .feature-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 22px;
+      }
+
+      .feature-icon {
+        width: 52px;
+        height: 52px;
+        display: grid;
+        place-items: center;
+        font-size: 1.5rem;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(255, 107, 53, 0.22), rgba(255, 138, 91, 0.18));
+        margin-bottom: 18px;
+      }
+
+      .feature-card h3 { margin: 0 0 10px; font-size: 1.25rem; }
+      .feature-card p { margin: 0; line-height: 1.7; color: var(--muted); }
+
+      .inventory {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .car-item {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        overflow: hidden;
+      }
+
+      .car-item img {
+        width: 100%;
+        height: 210px;
+        object-fit: cover;
+      }
+
+      .car-item-body { padding: 18px; }
+      .car-item-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .car-item-top h3 { margin: 0; font-size: 1.3rem; }
+      .car-item-top span { color: var(--success); font-weight: 700; }
+
+      .specs {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin: 12px 0 18px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .specs span {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 7px 10px;
+      }
+
+      .price-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .amount { font-size: 1.5rem; font-weight: 800; }
+
+      .cta {
+        background: linear-gradient(180deg, rgba(15,23,35,0.75), rgba(18,30,45,0.9));
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        padding: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .cta h3 {
+        margin: 0 0 8px;
+        font-size: clamp(2rem, 3vw, 3rem);
+      }
+
+      .cta p { margin: 0; color: var(--muted); }
+
+      footer {
+        padding: 26px 0 44px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid, .cards, .inventory { grid-template-columns: 1fr; }
+        .nav-links { display: none; }
+        .cta { display: grid; }
+      }
+
+      @media (max-width: 560px) {
+        .nav { min-height: 66px; }
+        .nav-actions { gap: 8px; }
+        .btn { padding: 12px 16px; font-size: 0.9rem; }
+        .mini-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <div class="brand">
+          <div class="brand-mark">V</div>
+          <span>VELOCITY</span>
+        </div>
+
+        <nav class="nav-links">
+          <a href="#home">Home</a>
+          <a href="#inventory">Inventory</a>
+          <a href="#features">Features</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="btn btn-secondary">Sign In</button>
+          <button class="btn btn-primary">Book Test Drive</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Premium Driving Experience</span>
+            <h1>Drive the future today.</h1>
+            <p>
+              Discover luxury performance, bold design, and next-generation technology
+              in every mile. Choose the car that matches your ambition.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn btn-primary">Shop Models</button>
+              <button class="btn btn-secondary">Explore Offers</button>
+            </div>
+
+            <div class="mini-stats">
+              <div class="stat-box">
+                <strong>1200+</strong>
+                <span>Cars Sold</span>
+              </div>
+              <div class="stat-box">
+                <strong>4.9/5</strong>
+                <span>Customer Rating</span>
+              </div>
+              <div class="stat-box">
+                <strong>24/7</strong>
+                <span>Support</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="car-card">
+            <div class="car-visual">
+              <div class="car-pill">2026 Model</div>
+              <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1000&q=80" alt="Luxury sports car" />
+            </div>
+            <div class="car-info">
+              <div class="car-name">
+                <h3>Velocity GT X</h3>
+                <p>Hybrid Performance Coupe</p>
+              </div>
+              <div class="price">
+                <span>Starting at</span>
+                <strong>$68,900</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features">
+        <div class="container">
+          <div class="section-heading">
+            <h2>Why drivers choose us</h2>
+            <a href="#">View more</a>
+          </div>
+
+          <div class="cards">
+            <article class="feature-card">
+              <div class="feature-icon">⚡</div>
+              <h3>Instant Performance</h3>
+              <p>High-output engines and dynamic handling create an exhilarating, confidence-building drive every time.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon">🛡️</div>
+              <h3>Safety First</h3>
+              <p>Advanced driver-assist systems, smart sensors, and superior braking keep every journey protected.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon">🎯</div>
+              <h3>Luxury Interior</h3>
+              <p>Premium seating, immersive infotainment, and refined details turn every ride into pure comfort.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="inventory">
+        <div class="container">
+          <div class="section-heading">
+            <h2>Featured inventory</h2>
+            <a href="#">Browse all</a>
+          </div>
+
+          <div class="inventory">
+            <article class="car-item">
+              <img src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1000&q=80" alt="Sports car" />
+              <div class="car-item-body">
+                <div class="car-item-top">
+                  <h3>Raptor S</h3>
+                  <span>New</span>
+                </div>
+                <div class="specs">
+                  <span>V8</span>
+                  <span>0-60 in 3.4s</span>
+                  <span>AWD</span>
+                </div>
+                <div class="price-row">
+                  <div class="amount">$74,500</div>
+                  <button class="btn btn-primary">Reserve</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="car-item">
+              <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=80" alt="Luxury car" />
+              <div class="car-item-body">
+                <div class="car-item-top">
+                  <h3>Summit X</h3>
+                  <span>Popular</span>
+                </div>
+                <div class="specs">
+                  <span>Hybrid</span>
+                  <span>480 hp</span>
+                  <span>Luxury</span>
+                </div>
+                <div class="price-row">
+                  <div class="amount">$61,200</div>
+                  <button class="btn btn-primary">Reserve</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="car-item">
+              <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=1000&q=80" alt="Electric car" />
+              <div class="car-item-body">
+                <div class="car-item-top">
+                  <h3>Volt E</h3>
+                  <span>Eco</span>
+                </div>
+                <div class="specs">
+                  <span>Electric</span>
+                  <span>320 mi</span>
+                  <span>Fast Charge</span>
+                </div>
+                <div class="price-row">
+                  <div class="amount">$52,900</div>
+                  <button class="btn btn-primary">Reserve</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="about">
+        <div class="container">
+          <div class="cta">
+            <div>
+              <h3>Ready to find your perfect drive?</h3>
+              <p>Explore premium cars, flexible financing, and lifetime support designed around your lifestyle.</p>
+            </div>
+            <button class="btn btn-primary">Get Started</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact">
+      <div class="container">© 2026 Velocity Motors. All rights reserved.</div>
+    </footer>
+  </body>
 </html>
