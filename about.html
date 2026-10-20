@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Travel comfortably with SwiftBus. Explore routes, compare fares, and plan your next bus journey.">
+  <title>SwiftBus | Travel Made Easy</title>
+  <style>
+    :root {
+      --navy: #10243a;
+      --blue: #1769aa;
+      --sky: #eaf5ff;
+      --orange: #ff8a3d;
+      --text: #182536;
+      --muted: #667789;
+      --white: #ffffff;
+      --border: #e3ebf2;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--white);
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button, input, select { font: inherit; }
+    .container { width: min(1120px, calc(100% - 36px)); margin: 0 auto; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, .96);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.35rem; font-weight: 800; color: var(--navy); }
+    .logo-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: grid; place-items: center;
+      background: var(--blue); color: white; font-size: 1.3rem;
+    }
+    .nav-links { display: flex; gap: 26px; color: #4f6173; font-weight: 600; font-size: .95rem; }
+    .nav-links a:hover { color: var(--blue); }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 13px 20px; border: 0; border-radius: 10px;
+      background: var(--orange); color: white; font-weight: 700; cursor: pointer;
+      transition: transform .2s, background .2s;
+    }
+    .button:hover { transform: translateY(-2px); background: #f17627; }
+    .button-blue { background: var(--blue); }
+    .button-blue:hover { background: #11568d; }
+
+    .hero {
+      padding: 76px 0 95px;
+      background: linear-gradient(110deg, #eef7ff 0%, #f7fbff 54%, #e2f1ff 100%);
+      overflow: hidden;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 48px; }
+    .tag {
+      display: inline-block; padding: 8px 12px; border-radius: 30px;
+      background: #d9edff; color: var(--blue); font-size: .82rem; font-weight: 800;
+      letter-spacing: .04em; text-transform: uppercase;
+    }
+    h1 { margin: 18px 0; font-size: clamp(2.6rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -.04em; color: var(--navy); }
+    .hero p { max-width: 520px; color: var(--muted); line-height: 1.8; font-size: 1.08rem; }
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+    .hero-image { position: relative; }
+    .hero-image img { width: 100%; height: 370px; object-fit: cover; border-radius: 24px; box-shadow: 0 24px 60px #153e6124; }
+    .image-label {
+      position: absolute; bottom: 18px; left: 18px; right: 18px;
+      padding: 15px 18px; border-radius: 14px; color: white;
+      background: rgba(16, 36, 58, .88); backdrop-filter: blur(8px);
+    }
+    .image-label strong { display: block; margin-bottom: 4px; }
+    .image-label span { font-size: .9rem; color: #d8e7f5; }
+
+    .booking-wrap { margin-top: -36px; position: relative; z-index: 2; }
+    .booking {
+      display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 14px;
+      padding: 22px; border-radius: 18px; background: white;
+      box-shadow: 0 16px 45px #163b5a16; border: 1px solid var(--border);
+    }
+    .field label { display: block; margin: 0 0 8px; color: var(--muted); font-size: .85rem; font-weight: 700; }
+    .field input, .field select {
+      width: 100%; min-width: 0; padding: 13px 12px; border: 1px solid var(--border);
+      border-radius: 9px; background: #fbfdff; color: var(--text); outline-color: var(--blue);
+    }
+    .booking .button { align-self: end; min-height: 46px; }
+
+    section { padding: 76px 0; }
+    .section-head { text-align: center; max-width: 650px; margin: 0 auto 38px; }
+    .section-head h2 { margin: 0 0 12px; color: var(--navy); font-size: clamp(2rem, 3vw, 2.8rem); }
+    .section-head p { margin: 0; color: var(--muted); line-height: 1.7; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .feature {
+      padding: 28px; border: 1px solid var(--border); border-radius: 18px; background: white;
+    }
+    .feature-icon {
+      display: grid; place-items: center; width: 54px; height: 54px;
+      margin-bottom: 18px; border-radius: 15px; background: var(--sky); font-size: 1.6rem;
+    }
+    .feature h3 { margin: 0 0 10px; color: var(--navy); }
+    .feature p { margin: 0; color: var(--muted); line-height: 1.7; }
+
+    .routes-section { background: #f7fbff; }
+    .routes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .route-card { overflow: hidden; background: white; border: 1px solid var(--border); border-radius: 18px; }
+    .route-card img { width: 100%; height: 190px; object-fit: cover; }
+    .route-body { padding: 20px; }
+    .route-body h3 { margin: 0 0 8px; color: var(--navy); }
+    .route-body p { margin: 0 0 16px; color: var(--muted); line-height: 1.6; }
+    .route-bottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .route-bottom strong { color: var(--blue); font-size: 1.1rem; }
+
+    .cta {
+      display: flex; justify-content: space-between; align-items: center; gap: 25px;
+      padding: 38px; border-radius: 22px; background: var(--navy); color: white;
+    }
+    .cta h2 { margin: 0 0 10px; font-size: clamp(1.8rem, 3vw, 2.5rem); }
+    .cta p { margin: 0; color: #c6d6e6; line-height: 1.7; }
+    footer { padding: 28px 0; background: #0b1b2c; color: #b9c9d8; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
+    footer a { margin-left: 16px; }
+    footer a:hover { color: white; }
+
+    @media (max-width: 850px) {
+      .nav-links { display: none; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-image img { height: 320px; }
+      .booking { grid-template-columns: 1fr 1fr; }
+      .booking .button { width: 100%; }
+      .features, .routes { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .hero { padding: 50px 0 70px; }
+      .hero-image img { height: 250px; }
+      .booking { grid-template-columns: 1fr; padding: 18px; }
+      section { padding: 56px 0; }
+      .features, .routes { grid-template-columns: 1fr; }
+      .cta { padding: 26px; align-items: flex-start; flex-direction: column; }
+      .navbar > .button { padding: 11px 13px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container navbar">
+      <a class="logo" href="#home"><span class="logo-icon">🚌</span> SwiftBus</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#routes">Routes</a>
+        <a href="#benefits">Why SwiftBus</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="button button-blue" href="#booking">Plan a Trip</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <span class="tag">Your journey, made better</span>
+          <h1>Every journey starts with comfort.</h1>
+          <p>Travel to the places you love with reliable bus journeys, comfortable seats, and an easy trip-planning experience. Sit back, relax, and enjoy the road ahead.</p>
+          <div class="hero-buttons">
+            <a class="button" href="#booking">Find Your Bus</a>
+            <a class="button button-blue" href="#routes">Explore Routes</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=1200&q=85" alt="Passenger bus ready for a journey">
+          <div class="image-label">
+            <strong>Comfort from start to finish</strong>
+            <span>Plan your next road trip with SwiftBus.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container booking-wrap" id="booking">
+      <form class="booking" id="trip-form">
+        <div class="field">
+          <label for="from">From</label>
+          <select id="from" name="from" required>
+            <option value="">Choose departure</option>
+            <option>Karachi</option>
+            <option>Lahore</option>
+            <option>Islamabad</option>
+            <option>Peshawar</option>
+            <option>Multan</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="to">To</label>
+          <select id="to" name="to" required>
+            <option value="">Choose destination</option>
+            <option>Karachi</option>
+            <option>Lahore</option>
+            <option>Islamabad</option>
+            <option>Peshawar</option>
+            <option>Multan</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="date">Travel date</label>
+          <input id="date" name="date" type="date" required>
+        </div>
+        <button class="button button-blue" type="submit">Search Buses</button>
+      </form>
+    </div>
+
+    <section id="benefits">
+      <div class="container">
+        <div class="section-head">
+          <h2>Travel with peace of mind</h2>
+          <p>We believe the journey should be just as enjoyable as the destination. That's why the little details matter.</p>
+        </div>
+        <div class="features">
+          <article class="feature">
+            <div class="feature-icon">🪑</div>
+            <h3>Comfortable Seats</h3>
+            <p>Settle in, stretch out, and enjoy a more comfortable ride on your next trip.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">🕒</div>
+            <h3>Plan with Ease</h3>
+            <p>Explore your travel options and organise your journey in just a few simple steps.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon">🛡️</div>
+            <h3>Travel with Care</h3>
+            <p>We put passenger comfort and a dependable travel experience at the heart of every journey.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="routes-section" id="routes">
+      <div class="container">
+        <div class="section-head">
+          <h2>Popular destinations</h2>
+          <p>Pick a destination and start planning your next trip across Pakistan.</p>
+        </div>
+        <div class="routes">
+          <article class="route-card">
+            <img src="https://images.unsplash.com/photo-1599661046827-dacff0c0f09a?auto=format&fit=crop&w=900&q=80" alt="Lahore city architecture">
+            <div class="route-body">
+              <h3>Lahore</h3>
+              <p>Discover rich history, colourful bazaars, and famous local food.</p>
+              <div class="route-bottom"><strong>City adventures</strong><a class="button button-blue" href="#booking">Plan trip</a></div>
+            </div>
+          </article>
+          <article class="route-card">
+            <img src="https://images.unsplash.com/photo-1567606404723-6b9c4c5e8b30?auto=format&fit=crop&w=900&q=80" alt="Islamabad with green hills">
+            <div class="route-body">
+              <h3>Islamabad</h3>
+              <p>Enjoy leafy avenues, peaceful views, and nearby mountain scenery.</p>
+              <div class="route-bottom"><strong>Scenic escapes</strong><a class="button button-blue" href="#booking">Plan trip</a></div>
+            </div>
+          </article>
+          <article class="route-card">
+            <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=900&q=80" alt="Historic landmark in Pakistan">
+            <div class="route-body">
+              <h3>Explore Pakistan</h3>
+              <p>Make memories with friends and family, one road trip at a time.</p>
+              <div class="route-bottom"><strong>Your next story</strong><a class="button button-blue" href="#booking">Plan trip</a></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="cta">
+          <div>
+            <h2>Your seat to the next adventure.</h2>
+            <p>Choose your route, pick your date, and get ready to enjoy the journey.</p>
+          </div>
+          <a class="button" href="#booking">Start Planning</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© 2026 SwiftBus. Travel made easy.</span>
+      <div><a href="#home">Home</a><a href="#routes">Routes</a><a href="#contact">Contact</a></div>
+    </div>
+  </footer>
+
+  <script>
+    const tripForm = document.getElementById('trip-form');
+    const travelDate = document.getElementById('date');
+    travelDate.min = new Date().toISOString().split('T')[0];
+
+    tripForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const from = document.getElementById('from').value;
+      const to = document.getElementById('to').value;
+      const date = travelDate.value;
+
+      if (from === to) {
+        alert('Please choose two different cities.');
+        return;
+      }
+
+      alert('Your trip search: ' + from + ' to ' + to + ' on ' + date + '. This is a demo landing page; connect a booking system to show real buses and fares.');
+    });
+  </script>
+</body>
+</html>
